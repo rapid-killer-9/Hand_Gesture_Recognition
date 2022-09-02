@@ -6,14 +6,12 @@ import HandDetectionModule as hdm
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-import streamlit as st
 
 
 ######################
 wCam, hCam = 748, 580
 ######################
 
-st.title("Hand Gesture")
 
 cap = cv2.VideoCapture(0)
 cap.set(3, wCam)
