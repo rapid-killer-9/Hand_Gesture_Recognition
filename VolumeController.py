@@ -9,7 +9,7 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 
 ######################
-wCam, hCam = 748, 580
+wCam, hCam = 780, 720
 ######################
 
 
