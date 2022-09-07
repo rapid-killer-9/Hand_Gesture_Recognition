@@ -40,7 +40,7 @@ maxVol = volRange[1]
 while True:
     SUCCESS, img = cap.read()
     detector.findHands(img,draw=True)
-    lmList = detector.findPosition(img, draw=True,points=[4,8])
+    lmList, bbox= detector.findPosition(img, drawPoints=True,drawBbox=True,points=[4,8])
     if len(lmList) != 0:
         # print(lmList[4], lmList[8])
 
