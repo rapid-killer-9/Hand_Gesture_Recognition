@@ -14,6 +14,7 @@ class HandDetector:
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.complexity, self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
+        self.tipIds = [4,8,12,16,20]
 
     def findHands(self, img, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -54,13 +55,13 @@ class HandDetector:
     def fingerUp(self):
         finger = []
         #thumb
-        if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0]-1][1]:
+        if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0]-1][1]:
             finger.append(1)
         else:
             finger.append(0)
         # 4 fingers
         for id in range(1,5):
-            if self.lmList[self.tipids[id]][2] < self.lmList[self.tipIds[id]-2][2]:
+            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id]-2][2]:
                 finger.append(1)
             else:
                 finger.append(0)
