@@ -1,6 +1,7 @@
 import cv2
 import HandDetectionModule as hdm
-import numpy as np
+from time import sleep
+from pynput.keyboard import Controller
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
@@ -10,6 +11,8 @@ detector = hdm.HandDetector(detectionCon=0.8)
 keys = [["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", ";"],
         ["Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"]]
+finalText = ""
+Keyboard = Controller()
 
 def drawAll(img, buttonList):
     for button in buttonList:
@@ -47,6 +50,21 @@ while True:
             if (x< lmList[8][1]< x+w) and (y< lmList[8][2]< y+h):
                 cv2.rectangle(img, button.pos, (x + w, y + h), (0, 255 , 0), cv2.FILLED)
                 cv2.putText(img, button.text, (x + 20, y + 60),cv2.FONT_HERSHEY_PLAIN , 4, (255, 255, 255), 4)
+
+                l,_,_ = detector.findDistance(8,12,img,False)
+                print(l)
+
+                if l<30:
+                    Keyboard.press(button.text)
+                    cv2.rectangle(img, button.pos, (x + w, y + h), (0, 255, 0), cv2.FILLED)
+                    cv2.putText(img, button.text, (x + 20, y + 60), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+                    finalText += button.text
+                    sleep(0.15)
+
+    cv2.rectangle(img,(45,550), (700,620), (175, 175, 0), cv2.FILLED)
+    cv2.putText(img, finalText, (50, 610), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 5)
+
+
 
     cv2.imshow("Image", img)
     cv2.waitKey(1)
