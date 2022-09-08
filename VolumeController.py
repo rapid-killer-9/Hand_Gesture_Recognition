@@ -19,9 +19,8 @@ cap.set(4, hCam)
 
 cTime, pTime = 0, 0
 
+
 detector = hdm.HandDetector(detectionCon=0.7)
-
-
 
 
 devices = AudioUtilities.GetSpeakers()
@@ -35,6 +34,8 @@ volRange = volume.GetVolumeRange()
 
 minVol = volRange[0]
 maxVol = volRange[1]
+volBar = 400
+area = 0
 
 
 while True:
@@ -43,33 +44,25 @@ while True:
     lmList, bbox= detector.findPosition(img, drawPoints=True,drawBbox=True,points=[4,8])
     if len(lmList) != 0:
         # print(lmList[4], lmList[8])
+        area = (bbox[2]-bbox[0])*(bbox[3]-bbox[1])//100
+        if 250 < area < 700:
+            print("Yes")
+            
+            length ,_,lineInfo= detector.findDistance(4,8,img,True)
 
-        x1, y1 = lmList[4][1], lmList[4][2]
-        x2, y2 = lmList[8][1], lmList[8][2]
+            # Hand Range 50 to 190
+            # Vol Range -95.25 to  0.0
+            x, y = 50, 170
+            vol = np.interp(length, [x, y], [minVol, maxVol])
+            volBar = np.interp(length, [x, y], [400, 150])
+            volPer = np.interp(length, [x, y], [0, 100])
+            # print(int(length), vol)
+            volume.SetMasterVolumeLevel(vol, None)
 
-        cx, cy = (x1+x2)//2, (y1+y2)//2
-
-        cv2.circle(img, (x1, y1), 10, (0, 0, 255), 2)
-        cv2.circle(img, (x2, y2), 10, (0, 0, 255), 2)
-        # cv2.circle(img, (cx, cy), 7, (0, 0, 255), 2)
-
-        cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
-
-        length = math.hypot(x2-x1, y2-y1)
-
-        # Hand Range 50 to 190
-        # Vol Range -95.25 to  0.0
-        x, y = 50, 170
-        vol = np.interp(length, [x, y], [minVol, maxVol])
-        volBar = np.interp(length, [x, y], [400, 150])
-        volPer = np.interp(length, [x, y], [0, 100])
-        # print(int(length), vol)
-        volume.SetMasterVolumeLevel(vol, None)
-
-        if length < x:
-            cv2.circle(img, (cx, cy), 10, (0, 0, 255), cv2.FILLED)
-        if length > y:
-            cv2.circle(img, (cx, cy), 10, (0, 255, 0), cv2.FILLED)
+            if length < x:
+                cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0, 0, 255), cv2.FILLED)
+            if length > y:
+                cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0, 255, 0), cv2.FILLED)
 
         cv2.rectangle(img, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(img, (50, int(volBar)), (85, 400), (0, 255, 0), cv2.FILLED)
