@@ -54,13 +54,13 @@ while True:
             # Vol Range -95.25 to  0.0
             x, y = 50, 170
             volBar = np.interp(length, [x, y], [400, 150])
-            volPer = np.interp(length, [x, y], [0, 100])
+            volper = np.interp(length, [x, y], [0, 100])
 
             # checking fingers up or down
             fingers = detector.fingerUp()
             # print(fingers)
             if not fingers[4]:
-                volume.SetMasterVolumeLevelScalar(volPer/100, None)
+                volume.SetMasterVolumeLevelScalar(volper/100, None)
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0,255,255), cv2.FILLED)
                 if length > y:
                     cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0, 255, 0), cv2.FILLED)
@@ -70,7 +70,7 @@ while True:
 
         cv2.rectangle(img, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(img, (50, int(volBar)), (85, 400), (0, 255, 0), cv2.FILLED)
-        cv2.putText(img, f'{int(volPer)}%', (45, 430), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
+        cv2.putText(img, f'{int(volper)}%', (45, 430), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
 
     cTime = time.time()
     fps = 1/(cTime-pTime)
