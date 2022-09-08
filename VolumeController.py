@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import time
-import math
 import HandDetectionModule as hdm
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
@@ -35,6 +34,7 @@ volRange = volume.GetVolumeRange()
 minVol = volRange[0]
 maxVol = volRange[1]
 volBar = 400
+volper = 0
 area = 0
 
 
@@ -45,7 +45,7 @@ while True:
     if len(lmList) != 0:
         # print(lmList[4], lmList[8])
         area = (bbox[2]-bbox[0])*(bbox[3]-bbox[1])//100
-        if 250 < area < 700:
+        if 200 < area < 700:
             print("Yes")
             
             length ,_,lineInfo= detector.findDistance(4,8,img,True)
@@ -53,16 +53,20 @@ while True:
             # Hand Range 50 to 190
             # Vol Range -95.25 to  0.0
             x, y = 50, 170
-            vol = np.interp(length, [x, y], [minVol, maxVol])
             volBar = np.interp(length, [x, y], [400, 150])
             volPer = np.interp(length, [x, y], [0, 100])
-            # print(int(length), vol)
-            volume.SetMasterVolumeLevel(vol, None)
 
-            if length < x:
-                cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0, 0, 255), cv2.FILLED)
-            if length > y:
-                cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0, 255, 0), cv2.FILLED)
+            # checking fingers up or down
+            fingers = detector.fingerUp()
+            # print(fingers)
+            if not fingers[4]:
+                volume.SetMasterVolumeLevelScalar(volPer/100, None)
+                cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0,255,255), cv2.FILLED)
+                if length > y:
+                    cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0, 255, 0), cv2.FILLED)
+                if length < x:
+                    cv2.circle(img, (lineInfo[4], lineInfo[5]), 10, (0, 0, 255), cv2.FILLED)
+
 
         cv2.rectangle(img, (50, 150), (85, 400), (0, 255, 0), 3)
         cv2.rectangle(img, (50, int(volBar)), (85, 400), (0, 255, 0), cv2.FILLED)
