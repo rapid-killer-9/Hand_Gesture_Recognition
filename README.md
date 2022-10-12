@@ -59,6 +59,27 @@ For Eg : git push origin master
   10. Done 😊
 
 
+# Demo
+# Volume Controller
+It can be controll using index finger and thumb finger to controll volume and to lock the volume pinky finger should be down
+1. **Image when volume is mute , when volume is at 0% then there will be red dot for indication**
+  ![](/image/img1.png)
+
+
+2. **Image when volume is at x level , when volume is at x % then there will be yellow dot for indication**
+  ![](/image/img3.png)
+
+3. **Image when volume is at full , when volume is at 100 % then there will be green dot for indication**
+  ![](/image/img2.png)
+
+# Virtual Keyboard Controller
+It can be controll using Index finger when distance between index and middle finger will be less than 30 then text will be typed
+1. **When nothing is typed using these Controller**
+  ![](/image/img4.png)
+
+2. **When Context is typed using these Controller**
+  ![](/image/img5.png)
+
 # Issues
   Feel free to submit issues and enhancement requests.
 
